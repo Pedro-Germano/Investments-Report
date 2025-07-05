@@ -3,7 +3,7 @@ import yfinance as yf
 import requests
 import pytz
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -24,9 +24,25 @@ wallet['Lucro/Prejuízo (R$)'] = None
 wallet['Rentabilidade Total (%)'] = None
 wallet['Rentabilidade Anualizada (%)'] = None
 
+"""
 # Função para pegar Cotação Atual de criptomoedas
 br_timezone = pytz.timezone("America/Sao_Paulo")
 hoje_brasilia = datetime.now(br_timezone)
+"""
+
+def ajustar_para_ultima_sexta_2030(dt):
+    if dt.weekday() >= 5:  # 5 = sábado, 6 = domingo
+        # Subtrai o número de dias até a última sexta-feira
+        dias_para_voltar = dt.weekday() - 4
+        ultima_sexta = dt - timedelta(days=dias_para_voltar)
+        return ultima_sexta.replace(hour=20, minute=30, second=0, microsecond=0)
+    else:
+        return dt
+
+# Exemplo de uso
+br_timezone = pytz.timezone("America/Sao_Paulo")
+hoje_brasilia = datetime.now(br_timezone)
+hoje_ajustado = ajustar_para_ultima_sexta_2030(hoje_brasilia)
 
 # Processa cada ativo
 for i, row in wallet.iterrows():
