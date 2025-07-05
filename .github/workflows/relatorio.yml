@@ -1,0 +1,31 @@
+name: 📬 Enviar Relatório Diário
+
+on:
+  schedule:
+    - cron: '30 19 * * 1-5'  # Executa 16:30 (BR) = 19:30 (UTC)
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Clonar o repositório
+      uses: actions/checkout@v3
+
+    - name: Instalar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Instalar dependências
+      run: |
+        pip install -r requirements.txt
+
+    - name: Executar o script
+      env:
+        EMAIL_USER: ${{ secrets.EMAIL_USER }}
+        EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+      run: |
+        python InvestmentsUpdate.py
+
