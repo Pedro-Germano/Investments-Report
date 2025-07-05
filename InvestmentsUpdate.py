@@ -209,6 +209,7 @@ benchmark_profitability
 # # Send E-mail
 
 # %%
+import os
 import smtplib
 from email.message import EmailMessage
 
@@ -278,8 +279,11 @@ def enviar_email_html(destinatario, assunto, corpo_html):
     msg.set_content("Seu e-mail não suporta HTML.")
     msg.add_alternative(corpo_html, subtype="html")
 
+    usuario = os.getenv("EMAIL_USER")
+    senha = os.getenv("EMAIL_PASS")
+    
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
-        smtp.login("pedro.germano99@gmail.com", "iqep qtgr ppvl fval")  # Use a senha do app aqui!
+        smtp.login(usuario, senha)
         smtp.send_message(msg)
 
 # Envio do e-mail
