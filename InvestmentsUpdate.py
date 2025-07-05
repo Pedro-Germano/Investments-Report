@@ -42,7 +42,7 @@ def ajustar_para_ultima_sexta_2030(dt):
 # Exemplo de uso
 br_timezone = pytz.timezone("America/Sao_Paulo")
 hoje_brasilia = datetime.now(br_timezone)
-hoje_ajustado = ajustar_para_ultima_sexta_2030(hoje_brasilia)
+hoje_brasilia = ajustar_para_ultima_sexta_2030(hoje_brasilia)
 
 # Processa cada ativo
 for i, row in wallet.iterrows():
@@ -166,8 +166,8 @@ from datetime import date
 
 # Função para rentabilidade de benchmark
 def calcular_rentabilidade_benchmark(ticker, dias):
-    data_inicio = (date.today() - pd.Timedelta(days=dias)).strftime('%Y-%m-%d')
-    data_fim = date.today().strftime('%Y-%m-%d')
+    data_inicio = (hoje_brasilia - pd.Timedelta(days=dias)).strftime('%Y-%m-%d')
+    data_fim = hoje_brasilia.strftime('%Y-%m-%d')
     try:
         dados = yf.download(ticker, start=data_inicio, progress=False, auto_adjust=True)
         preco_inicio = float(dados['Close'].dropna().iloc[0].squeeze())
@@ -200,7 +200,7 @@ def calcular_tabela_rentabilidades_benchmarks():
     benchmarks = {
         "CDI": lambda dias: calcular_rentabilidade_cdi(dias),
         "IBOVESPA": lambda dias: calcular_rentabilidade_benchmark("^BVSP", dias),
-        "S&P500": lambda dias: calcular_rentabilidade_ativo("IVVB11.SA", 1, dias)
+        "IVVB11": lambda dias: calcular_rentabilidade_ativo("IVVB11.SA", 1, dias)
     }
 
     resultado = []
